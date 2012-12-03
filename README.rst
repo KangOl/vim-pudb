@@ -18,8 +18,9 @@ To add/remove a breakpoint, you just need to call the command ``:TogglePudbBreak
 For easy access, you can bind it to the F7 key.
 
 
-    ``nnoremap <F7> :TogglePudbBreakPoint<CR>
-    inoremap <F7> <ESC>:TogglePudbBreakPoint<CR>a``
+    ``nnoremap <F7> :TogglePudbBreakPoint<CR>``
+
+    ``inoremap <F7> <ESC>:TogglePudbBreakPoint<CR>a``
 
 .. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
 
