@@ -15,17 +15,17 @@ Utilisation
 ===========
 To add/remove a breakpoint, you just need to call the command ``:TogglePudbBreakPoint``
 
-For easy access, you can bind it to the F7 key.
+For easy access, you can bind it to the F8 key.
 
 
-    ``nnoremap <F7> :TogglePudbBreakPoint<CR>``
+    ``nnoremap <F8> :TogglePudbBreakPoint<CR>``
 
-    ``inoremap <F7> <ESC>:TogglePudbBreakPoint<CR>a``
+    ``inoremap <F8> <ESC>:TogglePudbBreakPoint<CR>a``
 
 .. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
 
 Know problems
 =============
-Currently, the list of breakpoints is not releaded automatically. 
+Currently, the list of breakpoints is not reloaded automatically. 
 
 There is also room for speed optimisations.
