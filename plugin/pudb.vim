@@ -41,10 +41,12 @@ let b:pudb_sign_ids = []
 python << EOF
 import vim
 from pudb.settings import load_breakpoints
+from pudb import NUM_VERSION
 
 filename = vim.eval('expand("%:p")')
 
-bps = load_breakpoints(None)
+args = () if NUM_VERSION >= (2013, 1) else (None,)
+bps = load_breakpoints(*args)
 
 for bp in bps:
     if bp[0] != filename:
@@ -62,8 +64,10 @@ function! s:ToggleBreakPoint()
 python << EOF
 import vim
 from pudb.settings import load_breakpoints, save_breakpoints
+from pudb import NUM_VERSION
 
-bps = [bp[:2] for bp in load_breakpoints(None)]
+args = () if NUM_VERSION >= (2013, 1) else (None,)
+bps = [bp[:2] for bp in load_breakpoints(*args)]
 
 filename = vim.eval('expand("%:p")')
 row, col = vim.current.window.cursor
