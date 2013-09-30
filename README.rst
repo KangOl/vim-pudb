@@ -11,8 +11,8 @@ Installation
 The recommended way of installing is to use `vim-pathogen`_
 
 
-Utilisation
-===========
+How to use
+==========
 To add/remove a breakpoint, you just need to call the command ``:TogglePudbBreakPoint``
 
 For easy access, you can bind it to the F8 key.
