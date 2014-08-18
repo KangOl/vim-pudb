@@ -22,6 +22,8 @@ For easy access, you can bind it to the F8 key.
 
     ``inoremap <F8> <ESC>:TogglePudbBreakPoint<CR>a``
 
+    ``nmap <S-F8> <ESC>:!pudb %<CR>a``
+
 .. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
 
 Know problems

@@ -79,9 +79,10 @@ else:
     bps.append(bp)
 
 class BP(object):
-    def __init__(self, fn, ln):
+    def __init__(self, fn, ln, cond=None):
         self.file = fn
         self.line = ln
+        self.cond = cond
 
 bp_list = [BP(bp[0], bp[1]) for bp in bps]
 
