@@ -70,6 +70,7 @@ row, col = vim.current.window.cursor
 
 scriptname = os.path.join(vim.eval('s:plugin_dir'), 'set_breakpoint.py')
 proc = subprocess.Popen(['python', scriptname, filename, str(row)])
+proc.wait()
 
 vim.command('call s:UpdateBreakPoints()')
 EOF
