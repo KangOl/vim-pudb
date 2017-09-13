@@ -1,7 +1,7 @@
 " File: pudb.vim
 " Author: Christophe Simonis
 " Description: Manage pudb breakpoints directly into (neo)vim
-" Last Modified: 2017-09-12
+" Last Modified: 2017-09-13
 
 if exists('g:loaded_pudb_plugin') || &cp
     finish

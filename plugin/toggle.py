@@ -26,6 +26,9 @@ class BP(object):
     def __init__(self, fn, ln):
         self.file = fn
         self.line = ln
+        # TODO: Properly handle conditions and allow the user to create them
+        # from (neo)vim
+        self.cond = None
 
 
 bp_list = [BP(_bp[0], _bp[1]) for _bp in bps]
