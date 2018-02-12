@@ -14,8 +14,11 @@ Example usage:
 
 import sys
 
-from pudb.settings import load_breakpoints
-from pudb import NUM_VERSION
+try:
+    from pudb.settings import load_breakpoints
+    from pudb import NUM_VERSION
+except ImportError:
+    exit(-1)
 
 args = () if NUM_VERSION >= (2013, 1) else (None,)
 bps = load_breakpoints(*args)
