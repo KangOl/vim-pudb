@@ -1,8 +1,9 @@
 " File: pudb.vim
 " Author: Christophe Simonis
 " Description: Manage pudb breakpoints directly into vim
-" Last Modified: December 03, 2012
+" Last Modified: March 02, 2018
 "
+" TODO: handle conditions in breakpoints (at least do not loose them when saving breakpoints)
 
 if exists('g:loaded_pudb_plugin') || &cp
     finish
@@ -65,6 +66,7 @@ pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints, save_breakpoints
 from pudb import NUM_VERSION
+from bdb import Breakpoint
 
 args = () if NUM_VERSION >= (2013, 1) else (None,)
 bps = [bp[:2] for bp in load_breakpoints(*args)]
@@ -78,12 +80,7 @@ if bp in bps:
 else:
     bps.append(bp)
 
-class BP(object):
-    def __init__(self, fn, ln):
-        self.file = fn
-        self.line = ln
-
-bp_list = [BP(bp[0], bp[1]) for bp in bps]
+bp_list = [Breakpoint(bp[0], bp[1]) for bp in bps]
 
 save_breakpoints(bp_list)
 
