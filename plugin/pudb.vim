@@ -9,8 +9,8 @@ if exists('g:loaded_pudb_plugin') || &cp
 endif
 let g:loaded_pudb_plugin = 1
 
-if !has("python")
-    echo "Error: Required vim compiled with +python"
+if !has("pythonx")
+    echo "Error: Required vim compiled with +python and/or +python3"
     finish
 endif
 
@@ -38,7 +38,7 @@ endfor
 let b:pudb_sign_ids = []
 
 
-python << EOF
+pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints
 from pudb import NUM_VERSION
@@ -61,7 +61,7 @@ EOF
 endfunction
 
 function! s:ToggleBreakPoint()
-python << EOF
+pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints, save_breakpoints
 from pudb import NUM_VERSION
