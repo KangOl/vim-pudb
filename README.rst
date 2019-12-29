@@ -24,8 +24,20 @@ For easy access, you can bind it to the F8 key.
 
 .. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
 
-Know problems
+Configuration
 =============
-Currently, the list of breakpoints is not reloaded automatically. 
+The text of the sign can be defined with ``g:pudb_breakpoint_sign`` (default
+'>>'):
+
+    ``let g:pudb_breakpoint_sign = '>>'``
+
+The highlight group of the sign in the sign colum can be defined with
+``g:pudb_breakpoint_highlight`` (default 'error'):
+
+    ``let g:pudb_breakpoint_highlight = 'error'``
+
+Known problems
+=============
+Currently, the list of breakpoints is not reloaded automatically.
 
 There is also room for speed optimisations.
