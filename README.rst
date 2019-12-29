@@ -27,15 +27,19 @@ For easy access, you can bind it to the F8 key.
 Configuration
 =============
 The text of the sign can be defined with ``g:pudb_breakpoint_sign`` (default
-'>>'):
+``'>>'``):
 
     ``let g:pudb_breakpoint_sign = '>>'``
 
 The highlight group of the sign in the sign colum can be defined with
-``g:pudb_breakpoint_highlight`` (default 'error'):
+``g:pudb_breakpoint_highlight`` (default ``'error'``):
 
     ``let g:pudb_breakpoint_highlight = 'error'``
 
+The priority of the breakpoint signs can be defined with
+``g:pudb_breakpoint_priority`` (default ``100``):
+
+    ``let g:pudb_breakpoint_priority = 100``
 Known problems
 =============
 Currently, the list of breakpoints is not reloaded automatically.
