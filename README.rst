@@ -21,6 +21,9 @@ For easy access, you can bind it to the F8 key.
     ``nnoremap <F8> :TogglePudbBreakPoint<CR>``
 
     ``inoremap <F8> <ESC>:TogglePudbBreakPoint<CR>a``
+   
+In case the breakpoints get out of sync after a debugging session, there is also a command
+``:UpdatePudbBreakPoints`` which refreshes the breakpoint signs.
 
 .. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
 
