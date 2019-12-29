@@ -36,12 +36,12 @@ augroup pudb
     autocmd BufReadPost *.py call s:UpdateBreakPoints()
 augroup end
 
-let s:pudb_sign_group = 'pudb_sign_group'
+let s:pudb_sign_group = 'pudb_sign_group_'
 
 function! s:UpdateBreakPoints()
 
 " first remove existing signs
-call sign_unplace(s:pudb_sign_group)
+call sign_unplace(s:pudb_sign_group .. expand('%:p'))
 
 pythonx << EOF
 import vim
@@ -59,7 +59,7 @@ for bp_file, bp_lnum in bps:
 
     opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_breakpoint_priority'])
     vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-             '' % (vim.eval('s:pudb_sign_group'), filename, opts))
+             '' % (vim.eval('s:pudb_sign_group .. expand("%:p")'), filename, opts))
 EOF
 
 endfunction
