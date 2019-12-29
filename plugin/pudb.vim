@@ -39,8 +39,6 @@ augroup pudb
     autocmd BufReadPost *.py call s:UpdateBreakPoints()
 augroup end
 
-command! TogglePudbBreakPoint call s:ToggleBreakPoint()
-
 function! s:UpdateBreakPoints()
 
 " first remove existing signs
@@ -102,4 +100,7 @@ save_breakpoints(bp_list)
 vim.command('call s:UpdateBreakPoints()')
 EOF
 endfunction
+
+command! TogglePudbBreakPoint call s:ToggleBreakPoint()
+command! UpdatePudbBreakPoints call s:UpdateBreakPoints()
 
