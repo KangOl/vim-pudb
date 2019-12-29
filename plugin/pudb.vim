@@ -15,7 +15,22 @@ if !has("pythonx")
     finish
 endif
 
-sign define PudbBreakPoint text=Ø) texthl=error
+if !exists('g:pudb_breakpoint_sign')
+    let g:pudb_breakpoint_sign = '>>'
+endif
+
+if !exists('g:pudb_breakpoint_highlight')
+    let g:pudb_breakpoint_highlight = 'error'
+endif
+
+if !exists('g:pudb_breakpoint_priority')
+    let g:pudb_breakpoint_priority = 100
+endif
+
+call sign_define('PudbBreakPoint', {
+            \   'text': g:pudb_breakpoint_sign,
+            \   'texthl': g:pudb_breakpoint_highlight
+            \ })
 
 let s:first_sign_id = 10000
 let s:next_sign_id = s:first_sign_id
