@@ -57,7 +57,7 @@ for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
 
     opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_breakpoint_priority'])
     vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-             '' % (vim.eval('s:pudb_sign_group .. expand("%:p")'), filename, opts))
+             '' % (vim.eval('s:pudb_sign_group .. "%s"' % filename), filename, opts))
 EOF
 
 endfunction
