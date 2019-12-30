@@ -49,11 +49,9 @@ from pudb.settings import load_breakpoints
 from pudb import NUM_VERSION
 
 filename = vim.eval('expand("%:p")')
-
 args = () if NUM_VERSION >= (2013, 1) else (None,)
-bps = [bp[:2] for bp in load_breakpoints(*args)]
 
-for bp_file, bp_lnum in bps:
+for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     if bp_file != filename:
         continue
 
@@ -72,20 +70,19 @@ from pudb import NUM_VERSION
 from bdb import Breakpoint
 
 args = () if NUM_VERSION >= (2013, 1) else (None,)
-bps = {tuple(bp[:2]) for bp in load_breakpoints(*args)}
+bps = {(bp.file, bp.line): bp
+       for bp in map(lambda args: Breakpoint(*args), load_breakpoints(*args))}
 
 filename = vim.eval('expand("%:p")')
 row, col = vim.current.window.cursor
 
-bp = (filename, row)
-if bp in bps:
-    bps.remove(bp)
+bp_key = (filename, row)
+if bp_key in bps:
+    bps.pop(bp_key)
 else:
-    bps.add(bp)
+    bps[bp_key] = Breakpoint(filename, row)
 
-bp_list = [Breakpoint(bp[0], bp[1]) for bp in bps]
-
-save_breakpoints(bp_list)
+save_breakpoints(bps.values())
 
 vim.command('call s:UpdateBreakPoints()')
 EOF
