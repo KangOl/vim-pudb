@@ -93,3 +93,7 @@ endfunction
 
 command! TogglePudbBreakPoint call s:ToggleBreakPoint()
 command! UpdatePudbBreakPoints call s:UpdateBreakPoints()
+
+if &filetype == 'python'
+    call s:UpdateBreakPoints()
+endif
