@@ -1,22 +1,22 @@
 vim-pudb
 ========
 
-simple plugin allowing you to manage pudb breakpoint directly into vim.
+Simple plugin allowing you to manage pudb breakpoints directly from vim.
 
-This plugin need vim to be compiled with +python
+This plugin needs vim to be compiled with +python or +python3
 
 Installation
 ============
+The recommended way of installing is to use `vim-pathogen`_ or `vim-plug`_
 
-The recommended way of installing is to use `vim-pathogen`_
-
+.. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
+.. _vim-plug: https://github.com/junegunn/vim-plug
 
 How to use
 ==========
 To add/remove a breakpoint, you just need to call the command ``:TogglePudbBreakPoint``
 
-For easy access, you can bind it to the F8 key.
-
+For easy access, use a mapping:
 
     ``nnoremap <F8> :TogglePudbBreakPoint<CR>``
 
@@ -25,7 +25,10 @@ For easy access, you can bind it to the F8 key.
 In case the breakpoints get out of sync after a debugging session, there is also a command
 ``:UpdatePudbBreakPoints`` which refreshes the breakpoint signs.
 
-.. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
+To edit the condition of a breakpoint on the current line, use the command
+``:EditPudbBreakPoint``
+
+To clear all pudb breakpoints, use the command ``:ClearAllPudbBreakPoints``
 
 Configuration
 =============
