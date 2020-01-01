@@ -2,8 +2,6 @@
 " Author: Christophe Simonis
 " Description: Manage pudb breakpoints directly into vim
 " Last Modified: March 02, 2018
-"
-" TODO: handle conditions in breakpoints (at least do not loose them when saving breakpoints)
 
 if exists('g:loaded_pudb_plugin') || &cp
     finish
@@ -83,9 +81,42 @@ else:
     bps[bp_key] = Breakpoint(filename, row)
 
 save_breakpoints(bps.values())
-
-vim.command('call s:UpdateBreakPoints()')
 EOF
+
+call s:UpdateBreakPoints()
+endfunction
+
+function! s:EditBreakPoint()
+pythonx << EOF
+import vim
+from pudb.settings import load_breakpoints, save_breakpoints
+from pudb import NUM_VERSION
+from bdb import Breakpoint
+
+args = () if NUM_VERSION >= (2013, 1) else (None,)
+bps = {(bp.file, bp.line): bp
+       for bp in map(lambda args: Breakpoint(*args), load_breakpoints(*args))}
+
+filename = vim.eval('expand("%:p")')
+row, col = vim.current.window.cursor
+
+bp_key = (filename, row)
+if bp_key not in bps:
+    bps[bp_key] = Breakpoint(filename, row)
+bp = bps[bp_key]
+
+old_cond = '' if bp.cond is None else bp.cond
+vim.command('echo "Current condition: %s"' % old_cond)
+vim.command('echohl Question')
+vim.eval('inputsave()')
+bp.cond = vim.eval('input("New Condition: ", "%s")' % old_cond)
+vim.eval('inputrestore()')
+vim.command('echohl None')
+
+save_breakpoints(bps.values())
+EOF
+
+call s:UpdateBreakPoints()
 endfunction
 
 function! s:ClearAllBreakPoints()
@@ -100,6 +131,7 @@ endfunction
 command! TogglePudbBreakPoint call s:ToggleBreakPoint()
 command! UpdatePudbBreakPoints call s:UpdateBreakPoints()
 command! ClearAllPudbBreakPoints call s:ClearAllBreakPoints()
+command! EditPudbBreakPoint call s:EditBreakPoint()
 
 if &filetype == 'python'
     call s:UpdateBreakPoints()
