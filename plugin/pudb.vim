@@ -88,8 +88,18 @@ vim.command('call s:UpdateBreakPoints()')
 EOF
 endfunction
 
+function! s:ClearAllBreakPoints()
+pythonx << EOF
+from pudb.settings import save_breakpoints
+save_breakpoints([])
+EOF
+
+call s:UpdateBreakPoints()
+endfunction
+
 command! TogglePudbBreakPoint call s:ToggleBreakPoint()
 command! UpdatePudbBreakPoints call s:UpdateBreakPoints()
+command! ClearAllPudbBreakPoints call s:ClearAllBreakPoints()
 
 if &filetype == 'python'
     call s:UpdateBreakPoints()
