@@ -1,7 +1,8 @@
 " File: pudb.vim
 " Author: Christophe Simonis, Michael van der Kamp
-" Description: Manage pudb breakpoints directly into vim
-" Last Modified: March 01, 2020
+" Description: Manage pudb breakpoints directly from vim
+" Last Modified: March 07, 2020
+
 
 if exists('g:loaded_pudb_plugin') || &cp
     finish
@@ -9,37 +10,49 @@ endif
 let g:loaded_pudb_plugin = 1
 
 if !has("pythonx")
-    echo "Error: Required vim compiled with +python and/or +python3"
+    echoerr "vim-pudb requires vim compiled with +python and/or +python3"
     finish
 endif
 
-if !exists('g:pudb_breakpoint_sign')
-    let g:pudb_breakpoint_sign = '>>'
+if !has("signs")
+    echoerr "vim-pudb requires vim compiled with +signs"
+    finish
 endif
 
-if !exists('g:pudb_breakpoint_highlight')
-    let g:pudb_breakpoint_highlight = 'error'
+
+"
+" Load options and set defaults
+"
+if !exists('g:pudb_sign')
+    let g:pudb_sign = 'B>'
 endif
 
-if !exists('g:pudb_breakpoint_priority')
-    let g:pudb_breakpoint_priority = 100
+if !exists('g:pudb_highlight')
+    let g:pudb_highlight = 'error'
+endif
+
+if !exists('g:pudb_priority')
+    let g:pudb_priority = 100
+endif
+
+if !exists('g:pudb_sign_group')
+    let g:pudb_sign_group = '_pudb_sign_group_'
 endif
 
 call sign_define('PudbBreakPoint', {
-            \   'text': g:pudb_breakpoint_sign,
-            \   'texthl': g:pudb_breakpoint_highlight
+            \   'text': g:pudb_sign,
+            \   'texthl': g:pudb_highlight
             \ })
 
-augroup pudb
-    autocmd BufReadPost *.py call s:UpdateBreakpoints()
-augroup end
 
-let s:pudb_sign_group = 'pudb_sign_group_'
+"
+" Loads the pudb breakpoint file and Updates the breakpoint signs for all
+" breakpoints in all buffers.
+"
+function! s:Update()
 
-function! s:UpdateBreakpoints()
-
-" first remove existing signs
-call sign_unplace(s:pudb_sign_group .. expand('%:p'))
+    " first remove existing signs
+    call sign_unplace(g:pudb_sign_group)
 
 pythonx << EOF
 import vim
@@ -50,9 +63,9 @@ args = () if NUM_VERSION >= (2013, 1) else (None,)
 
 for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     try:
-        opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_breakpoint_priority'])
+        opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_priority'])
         vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-                 '' % (vim.eval('s:pudb_sign_group .. "%s"' % bp_file), bp_file, opts))
+                 '' % (vim.eval('g:pudb_sign_group'), bp_file, opts))
     except vim.error:
         # Buffer for the given file isn't loaded.
         continue
@@ -60,7 +73,12 @@ EOF
 
 endfunction
 
-function! s:ToggleBreakpoint()
+
+"
+" Toggles a breakpoint on the current line.
+"
+function! s:Toggle()
+
 pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints, save_breakpoints
@@ -83,10 +101,16 @@ else:
 save_breakpoints(bps.values())
 EOF
 
-call s:UpdateBreakpoints()
+    call s:Update()
 endfunction
 
-function! s:EditBreakPoint()
+
+"
+" Edit the condition of a breakpoint on the current line.
+" If no such breakpoint exists, creates one.
+"
+function! s:Edit()
+
 pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints, save_breakpoints
@@ -116,19 +140,31 @@ vim.command('echohl None')
 save_breakpoints(bps.values())
 EOF
 
-call s:UpdateBreakpoints()
+    call s:Update()
 endfunction
 
-function! s:ClearAllBreakpoints()
+
+"
+" Clears all pudb breakpoints from all files.
+"
+function! s:ClearAll()
+
 pythonx << EOF
 from pudb.settings import save_breakpoints
 save_breakpoints([])
 EOF
 
-call s:UpdateBreakpoints()
+    call s:Update()
 endfunction
 
-function! s:ListBreakpoints()
+
+"
+" Prints a list of all the breakpoints in all files.
+" Shows the full file path, line number, and condition of each breakpoint.
+"
+function! s:List()
+    call s:Update()
+
 pythonx << EOF
 import vim
 from pudb.settings import load_breakpoints
@@ -142,14 +178,25 @@ for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
         bp_file, bp_lnum, '' if not bool(cond) else ' %s' % cond
     ))
 EOF
+
 endfunction
 
-command! PudbToggleBreakpoint call s:ToggleBreakpoint()
-command! PudbUpdateBreakpoints call s:UpdateBreakpoints()
-command! PudbClearAllBreakpoints call s:ClearAllBreakpoints()
-command! PudbEditBreakpoint call s:EditBreakPoint()
-command! PudbListBreakpoints call s:ListBreakpoints()
 
+" Define ex commands for all the above functions so they are user-accessible.
+command! PudbClearAll call s:ClearAll()
+command! PudbEdit     call s:Edit()
+command! PudbList     call s:List()
+command! PudbToggle   call s:Toggle()
+command! PudbUpdate   call s:Update()
+
+
+" If we were loaded lazily, update immediately.
 if &filetype == 'python'
-    call s:UpdateBreakpoints()
+    call s:Update()
 endif
+
+
+" Also update when the file is first read.
+augroup pudb
+    autocmd BufReadPost *.py call s:Update()
+augroup end
