@@ -182,10 +182,37 @@ EOF
 endfunction
 
 
+"
+" Populate the quickfix list with the breakpoint locations.
+"
+function! s:QuickfixList()
+    call s:Update()
+
+pythonx << EOF
+import vim
+from pudb.settings import load_breakpoints
+from pudb import NUM_VERSION
+
+qflist = []
+args = () if NUM_VERSION >= (2013, 1) else (None,)
+for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
+    try:
+        line = vim.eval('getbufline(bufname("%s"), %s)' % (bp_file, bp_lnum))[0]
+    except LookupError:
+        line = '<buffer not loaded>'
+    qflist.append(':'.join(map(str, [bp_file, bp_lnum, line])))
+
+vim.command('cgetexpr %s' % (qflist))
+EOF
+
+endfunction
+
+
 " Define ex commands for all the above functions so they are user-accessible.
 command! PudbClearAll call s:ClearAll()
 command! PudbEdit     call s:Edit()
 command! PudbList     call s:List()
+command! PudbQfList   call s:QuickfixList()
 command! PudbToggle   call s:Toggle()
 command! PudbUpdate   call s:Update()
 

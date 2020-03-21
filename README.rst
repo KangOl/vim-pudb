@@ -47,6 +47,11 @@ Commands
     Show a list of the full file paths, line numbers, and conditions of all
     breakpoints.
 
+``:PudbQfList``
+    Load all breakpoints into the quickfix list. Does not jump to the first
+    entry. Breakpoints into buffers that are not loaded will be in the list, but
+    with the text '<buffer not loaded>'.
+
 ``:PudbUpdate``
     Sometimes the breakpoint signs can get out of date. The above commands will
     all trigger an update, but this command lets you trigger an update without
@@ -64,6 +69,7 @@ conflicts with other plugins. Here's what I use:
     nnoremap <leader>bc :<C-U>PudbClearAll<CR>
     nnoremap <leader>be :<C-U>PudbEdit<CR>
     nnoremap <leader>bl :<C-U>PudbList<CR>
+    nnoremap <leader>bq :<C-U>PudbQfList<CR>
     nnoremap <leader>bp :<C-U>PudbToggle<CR>
     nnoremap <leader>bu :<C-U>PudbUpdate<CR>
 
