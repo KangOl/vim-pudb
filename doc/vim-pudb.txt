@@ -1,0 +1,153 @@
+*vim-pudb.txt*  Manage pudb breakpoints directly from vim
+
+Author: Michael van der Kamp
+License: Same terms as vim itself (see |license|)
+
+Forked from vim-pudb: https://github.com/KangOl/vim-pudb
+
+
+==============================================================================
+CONTENTS                                        *vim-pudb-contents* *vim-pudb*
+
+    1. Introduction ........................... |vim-pudb-introduction|
+    2. Installation ........................... |vim-pudb-installation|
+    3. Requirements ........................... |vim-pudb-requirements|
+    4. Commands ............................... |vim-pudb-commands|
+        4.1 PudbToggle ........................ |vim-pudb-:PudbToggle|
+        4.2 PudbEdit .......................... |vim-pudb-:PudbEdit|
+        4.3 PudbClearAll ...................... |vim-pudb-:PudbClearAll|
+        4.4 PudbList .......................... |vim-pudb-:PudbList|
+        4.5 PudbQfList ........................ |vim-pudb-:PudbQfList|
+        4.6 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
+    5. Configuration .......................... |vim-pudb-configuration|
+    6. Known problems ......................... |vim-pudb-known-problems|
+
+
+==============================================================================
+INTRODUCTION                                    *vim-pudb-introduction*
+
+This plugin allows you to:
+
+    * Toggle pudb breakpoints
+    * Edit and view pudb breakpoints
+    * List pudb breakpoints
+    * Load pudb breakpoints into the quickfix list
+
+There are no mappings set up by default, so you don't have to worry about
+conflicts with other plugins. Here are some recommended mappings though,
+to add to your `.vimrc` file:
+>
+    nnoremap <leader>bc :<C-U>PudbClearAll<CR>
+    nnoremap <leader>be :<C-U>PudbEdit<CR>
+    nnoremap <leader>bl :<C-U>PudbList<CR>
+    nnoremap <leader>bq :<C-U>PudbQfList<CR>
+    nnoremap <leader>bp :<C-U>PudbToggle<CR>
+    nnoremap <leader>bu :<C-U>PudbUpdate<CR>
+<
+
+==============================================================================
+INSTALLATION                                    *vim-pudb-installation*
+
+Similar to any other vim plugin, use your preferred method. If you're new,
+check out:
+
+    packages:     |packages|
+    vim-pathogen: https://github.com/tpope/vim-pathogen#readme
+    vim-plug:     https://github.com/junegunn/vim-plug
+
+
+==============================================================================
+REQUIREMENTS                                    *vim-pudb-requirements*
+
+This plugin needs vim to be compiled with `+python` or `+python3` as well as
+`+signs` and is intended for vim 8.2 or later.
+
+You will also need to have `pudb` installed: https://pypi.org/project/pudb/
+
+
+==============================================================================
+COMMANDS                                        *vim-pudb-commands*
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbToggle*
+:PudbToggle
+    Add / remove a breakpoint at the current line.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbEdit*
+:PudbEdit
+    Edit the condition of a breakpoint on the current line. Creates a
+    breakpoint if one doesn't already exist.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbClearAll*
+:PudbClearAll
+    Remove all breakpoints from every file.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbList*
+:PudbList
+    Show a list of the full file paths, line numbers, and conditions of all
+    breakpoints.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbQfList*
+:PudbQfList
+    Load all breakpoints into the quickfix list. Does not jump to the first
+    entry. Breakpoints into buffers that are not loaded will be in the list,
+    but with the text '<buffer not loaded>'.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbUpdate*
+:PudbUpdate
+    Sometimes the breakpoint signs can get out of date. The above commands
+    will all trigger an update, but this command lets you trigger an update
+    without doing anything else.
+
+
+==============================================================================
+CONFIGURATION                                   *vim-pudb-configuration*
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-sign*
+The text of the sign can be defined with `g:pudb_sign`:
+
+    `let g:pudb_sign = 'B>'`
+
+Default: `'B>'`
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-sign-group*
+This plugin uses sign groups. You can change the name of the sign group using
+`g:pudb_sign_group`:
+
+    `let g:pudb_sign_group = 'pudb_sign_group'`
+
+Default: `'pudb_sign_group'`
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-highlight*
+The highlight group of the sign in the sign colum can be defined with
+`g:pudb_highlight`:
+
+    `let g:pudb_highlight = 'error'`
+
+Default: `'error'`
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-priority*
+The priority of the breakpoint signs can be defined with `g:pudb_priority`:
+
+    `let g:pudb_priority = 100`
+
+Default: `100`
+
+
+==============================================================================
+KNOWN PROBLEMS                                  *vim-pudb-known-problems*
+
+- Currently, the list of breakpoints is not reloaded automatically. Signs are
+  only updated when a python buffer is first read, or when one of the above
+  commands is called.
+- There may be room for speed optimisations.
+- There is currently no way to specify which breakpoint file to use.
