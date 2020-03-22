@@ -23,24 +23,13 @@ endif
 "
 " Load options and set defaults
 "
-if !exists('g:pudb_sign')
-    let g:pudb_sign = 'B>'
-endif
-
-if !exists('g:pudb_highlight')
-    let g:pudb_highlight = 'error'
-endif
-
-if !exists('g:pudb_priority')
-    let g:pudb_priority = 100
-endif
-
-if !exists('g:pudb_sign_group')
-    let g:pudb_sign_group = '_pudb_sign_group_'
-endif
+let g:pudb_sign       = get(g:, 'pudb_sign',       'B>')
+let g:pudb_highlight  = get(g:, 'pudb_highlight',  'error')
+let g:pudb_priority   = get(g:, 'pudb_priority',   100)
+let g:pudb_sign_group = get(g:, 'pudb_sign_group', 'pudb_sign_group')
 
 call sign_define('PudbBreakPoint', {
-            \   'text': g:pudb_sign,
+            \   'text':   g:pudb_sign,
             \   'texthl': g:pudb_highlight
             \ })
 
@@ -65,7 +54,7 @@ for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     try:
         opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_priority'])
         vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-                 '' % (vim.eval('g:pudb_sign_group'), bp_file, opts))
+                 '' % (vim.vars['pudb_sign_group'], bp_file, opts))
     except vim.error:
         # Buffer for the given file isn't loaded.
         continue
