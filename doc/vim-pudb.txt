@@ -17,7 +17,9 @@ CONTENTS                                        *vim-pudb-contents* *vim-pudb*
         4.2 PudbEdit .......................... |vim-pudb-:PudbEdit|
         4.3 PudbClearAll ...................... |vim-pudb-:PudbClearAll|
         4.4 PudbList .......................... |vim-pudb-:PudbList|
+        4.4 PudbLocList ....................... |vim-pudb-:PudbLocList|
         4.5 PudbQfList ........................ |vim-pudb-:PudbQfList|
+        4.5 PudbPopulateList .................. |vim-pudb-:PudbPopulateList|
         4.6 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
     5. Configuration .......................... |vim-pudb-configuration|
     6. Known problems ......................... |vim-pudb-known-problems|
@@ -91,11 +93,27 @@ COMMANDS                                        *vim-pudb-commands*
     breakpoints.
 
 ------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbLocList*
+:PudbLocList
+    Load all breakpoints into the location list. Does not jump to the first
+    entry. Breakpoints into buffers that are not loaded will be in the list,
+    but with the text '<buffer not loaded>'. Lines containing only whitespace
+    will appear with the text '<blank line>'
+
+------------------------------------------------------------------------------
                                                 *vim-pudb-:PudbQfList*
 :PudbQfList
     Load all breakpoints into the quickfix list. Does not jump to the first
     entry. Breakpoints into buffers that are not loaded will be in the list,
-    but with the text '<buffer not loaded>'.
+    but with the text '<buffer not loaded>'. Lines containing only whitespace
+    will appear with the text '<blank line>'
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbPopulateList*
+:PudbPopulateList <arg>
+    Supply a list of all breakpoints, in quickfix format, to the Ex command
+    given by <arg>. This is a generic form of PudbLocList and PudbQfList,
+    allowing you to customise the operation for any precise need you may have.
 
 ------------------------------------------------------------------------------
                                                 *vim-pudb-:PudbUpdate*

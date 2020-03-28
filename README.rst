@@ -47,10 +47,22 @@ Commands
     Show a list of the full file paths, line numbers, and conditions of all
     breakpoints.
 
+``:PudbLocList``
+    Load all breakpoints into the location list. Does not jump to the first
+    entry. Breakpoints into buffers that are not loaded will be in the list, but
+    with the text '<buffer not loaded>'. Lines containing only whitespace
+    will appear with the text '<blank line>'
+
 ``:PudbQfList``
     Load all breakpoints into the quickfix list. Does not jump to the first
     entry. Breakpoints into buffers that are not loaded will be in the list, but
-    with the text '<buffer not loaded>'.
+    with the text '<buffer not loaded>'. Lines containing only whitespace
+    will appear with the text '<blank line>'
+
+``:PudbPopulateList <arg>``
+    Supply a list of all breakpoints, in quickfix format, to the Ex command
+    given by <arg>. This is a generic form of PudbLocList and PudbQfList,
+    allowing you to customise the operation for any precise need you may have.
 
 ``:PudbUpdate``
     Sometimes the breakpoint signs can get out of date. The above commands will

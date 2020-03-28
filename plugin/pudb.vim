@@ -172,10 +172,10 @@ endfunction
 
 
 "
-" Populate the quickfix list with the breakpoint locations.
+" Calls the given vim command with a list of the breakpoints as strings in
+" quickfix format.
 "
-function! s:QuickfixList()
-    call s:Update()
+function! s:PopulateList(list_command)
 
 pythonx << EOF
 import vim
@@ -187,13 +187,33 @@ args = () if NUM_VERSION >= (2013, 1) else (None,)
 for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     try:
         line = vim.eval('getbufline(bufname("%s"), %s)' % (bp_file, bp_lnum))[0]
+        if not line:
+            line = '<blank line>'
     except LookupError:
         line = '<buffer not loaded>'
     qflist.append(':'.join(map(str, [bp_file, bp_lnum, line])))
 
-vim.command('cgetexpr %s' % (qflist))
+vim.command('%s %s' % (vim.eval('a:list_command'), qflist))
 EOF
 
+endfunction
+
+
+"
+" Populate the quickfix list with the breakpoint locations.
+"
+function! s:QuickfixList()
+    call s:Update()
+    call s:PopulateList('cgetexpr')
+endfunction
+
+
+"
+" Populate the location list with the breakpoint locations.
+"
+function! s:LocationList()
+    call s:Update()
+    call s:PopulateList('lgetexpr')
 endfunction
 
 
@@ -201,9 +221,12 @@ endfunction
 command! PudbClearAll call s:ClearAll()
 command! PudbEdit     call s:Edit()
 command! PudbList     call s:List()
+command! PudbLocList  call s:LocationList()
 command! PudbQfList   call s:QuickfixList()
 command! PudbToggle   call s:Toggle()
 command! PudbUpdate   call s:Update()
+
+command! -nargs=1 -complete=command PudbPopulateList call s:Update() <bar> call s:PopulateList("<args>")
 
 
 " If we were loaded lazily, update immediately.
