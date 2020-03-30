@@ -187,7 +187,7 @@ args = () if NUM_VERSION >= (2013, 1) else (None,)
 for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     try:
         line = vim.eval('getbufline(bufname("%s"), %s)' % (bp_file, bp_lnum))[0]
-        if not line:
+        if line.strip() == '':
             line = '<blank line>'
     except LookupError:
         line = '<buffer not loaded>'
