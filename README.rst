@@ -104,9 +104,9 @@ The priority of the breakpoint signs can be defined with ``g:pudb_priority``
 ``let g:pudb_priority = 100``
 
 This plugin uses sign groups. You can change the name of the sign group using
-``g:pudb_sign_group`` (default ``_pudb_sign_group_``):
+``g:pudb_sign_group`` (default ``pudb_sign_group``):
 
-``let g:pudb_sign_group = '_pudb_sign_group_'``
+``let g:pudb_sign_group = 'pudb_sign_group'``
 
 
 Known problems
