@@ -53,8 +53,10 @@ args = () if NUM_VERSION >= (2013, 1) else (None,)
 for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*args):
     try:
         opts = '{"lnum": %d, "priority": %d}' % (bp_lnum, vim.vars['pudb_priority'])
+
+        # Critical to use vim.eval here instead of vim.vars[] to get sign group
         vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-                 '' % (vim.vars['pudb_sign_group'], bp_file, opts))
+                 '' % (vim.eval('g:pudb_sign_group'), bp_file, opts))
     except vim.error:
         # Buffer for the given file isn't loaded.
         continue
