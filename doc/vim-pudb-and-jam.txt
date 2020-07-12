@@ -8,6 +8,7 @@ Forked from vim-pudb: https://github.com/KangOl/vim-pudb
 
 ==============================================================================
 CONTENTS                                        *vim-pudb-contents* *vim-pudb*
+                                                *vim-pudb-and-jam*
 
     1. Introduction ........................... |vim-pudb-introduction|
     2. Installation ........................... |vim-pudb-installation|
