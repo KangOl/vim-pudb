@@ -1,9 +1,10 @@
-vim-pudb
-========
+vim-pudb-and-jam
+================
 
 A simple plugin allowing you to manage pudb breakpoints directly from vim.
-
-Forked from `vim-pudb`_
+Forked from `vim-pudb`_ and given some jammy features such as setting and
+editing equations, improved persistence of breakpoints, and the ability to list
+active breakpoints either as a printed message or in a quickfix list.
 
 .. _vim-pudb: https://github.com/KangOl/vim-pudb
 
@@ -12,10 +13,10 @@ Installation
 ============
 
 Similar to any other vim plugin, use your preferred method. If you're new, check
-out `vim-pathogen`_ or `vim-plug`_ or ``:help packages``
-
-.. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
-.. _vim-plug: https://github.com/junegunn/vim-plug
+out
+`vim-pathogen <https://github.com/tpope/vim-pathogen#readme>`_ or
+`vim-plug <https://github.com/junegunn/vim-plug>`_ or
+`:help packages <https://vimhelp.org/repeat.txt.html#packages>`_
 
 
 Requirements

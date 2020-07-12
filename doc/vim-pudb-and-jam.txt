@@ -1,4 +1,4 @@
-*vim-pudb.txt*  Manage pudb breakpoints directly from vim
+*vim-pudb-and-jam.txt*  Manage pudb breakpoints directly from vim
 
 Author: Michael van der Kamp
 License: Same terms as vim itself (see |license|)
@@ -22,6 +22,10 @@ CONTENTS                                        *vim-pudb-contents* *vim-pudb*
         4.5 PudbPopulateList .................. |vim-pudb-:PudbPopulateList|
         4.6 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
     5. Configuration .......................... |vim-pudb-configuration|
+        5.1 vim-pudb-sign ..................... |vim-pudb-sign|
+        5.2 vim-pudb-sign-group ............... |vim-pudb-sign-group|
+        5.3 vim-pudb-highlight ................ |vim-pudb-highlight|
+        5.4 vim-pudb-priority ................. |vim-pudb-priority|
     6. Known problems ......................... |vim-pudb-known-problems|
 
 
