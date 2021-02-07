@@ -219,6 +219,18 @@ function! s:LocationList()
 endfunction
 
 
+"
+" Clear the python line cache for the given file if it has changed
+"
+function! s:ClearLineCache(filename)
+pythonx << EOF
+import linecache
+import vim
+linecache.checkcache(vim.eval('a:filename'))
+EOF
+endfunction
+
+
 " Define ex commands for all the above functions so they are user-accessible.
 command! PudbClearAll call s:ClearAll()
 command! PudbEdit     call s:Edit()
@@ -237,7 +249,11 @@ if &filetype == 'python'
 endif
 
 
-" Also update when the file is first read.
 augroup pudb
+    " Also update when the file is first read.
     autocmd BufReadPost *.py call s:Update()
+
+    " Force a linecache update after writes so the breakpoints can be parsed
+    " correctly.
+    autocmd BufWritePost *.py call s:ClearLineCache(expand('%:p'))
 augroup end
