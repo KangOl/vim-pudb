@@ -1,2 +1,3 @@
 tags
 *.sw[op]
+__pycache__
