@@ -106,7 +106,7 @@ def populateList(list_command):
     qflist = []
     for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*LOAD_ARGS):
         try:
-            line = vim.eval('getbufline(bufname("%s"), %s)'
+            line = vim.eval('getbufline("%s", %s)'
                             % (bp_file, bp_lnum))[0]
             if line.strip() == '':
                 line = '<blank line>'
