@@ -2,6 +2,7 @@
 import vim
 
 from bdb import Breakpoint
+from itertools import starmap
 from linecache import checkcache
 from pudb.settings import load_breakpoints, save_breakpoints
 from pudb import NUM_VERSION
@@ -9,18 +10,26 @@ from pudb import NUM_VERSION
 LOAD_ARGS = () if NUM_VERSION >= (2013, 1) else (None,)
 
 
+def breakpoints():
+    """
+    :return: An iterator over the saved breakpoints.
+    :rtype: starmap(Breakpoint)
+    """
+    return starmap(Breakpoint, load_breakpoints(*LOAD_ARGS))
+
+
 def update():
     vim.command('call sign_unplace(g:pudb_sign_group)')
-    for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*LOAD_ARGS):
+    for bp in breakpoints():
         try:
             opts = ('{"lnum": %d, "priority": %d}'
-                    % (bp_lnum, vim.vars['pudb_priority']))
+                    % (bp.line, vim.vars['pudb_priority']))
 
             # Critical to use vim.eval here instead of vim.vars[] to get sign
             # group, since vim.vars[] will render the string as
             # "b'pudb_sign_group'" instead of "pudb_sign_group"
             vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-                     '' % (vim.eval('g:pudb_sign_group'), bp_file, opts))
+                     '' % (vim.eval('g:pudb_sign_group'), bp.file, opts))
         except vim.error:
             # Buffer for the given file isn't loaded.
             continue
@@ -31,8 +40,7 @@ def toggle():
     Toggles a breakpoint on the current line.
     """
     bps = {(bp.file, bp.line): bp
-           for bp in map(lambda values: Breakpoint(*values),
-                         load_breakpoints(*LOAD_ARGS))}
+           for bp in breakpoints()}
 
     filename = vim.eval('expand("%:p")')
     row, col = vim.current.window.cursor
@@ -53,8 +61,7 @@ def edit():
     If no such breakpoint exists, creates one.
     """
     bps = {(bp.file, bp.line): bp
-           for bp in map(lambda values: Breakpoint(*values),
-                         load_breakpoints(*LOAD_ARGS))}
+           for bp in breakpoints()}
 
     filename = vim.eval('expand("%:p")')
     row, col = vim.current.window.cursor
@@ -91,9 +98,9 @@ def list_breakpoints():
     """
     update()
     vim.command('echomsg "Listing all pudb breakpoints:"')
-    for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*LOAD_ARGS):
+    for bp in breakpoints():
         vim.command('echomsg "%s:%d:%s"' % (
-            bp_file, bp_lnum, '' if not bool(cond) else ' %s' % cond
+            bp.file, bp.line, '' if not bool(bp.cond) else ' %s' % bp.cond
         ))
 
 
@@ -104,15 +111,15 @@ def populateList(list_command):
     """
     update()
     qflist = []
-    for bp_file, bp_lnum, temp, cond, funcname in load_breakpoints(*LOAD_ARGS):
+    for bp in breakpoints():
         try:
             line = vim.eval('getbufline("%s", %s)'
-                            % (bp_file, bp_lnum))[0]
+                            % (bp.file, bp.line))[0]
             if line.strip() == '':
                 line = '<blank line>'
         except LookupError:
             line = '<buffer not loaded>'
-        qflist.append(':'.join(map(str, [bp_file, bp_lnum, line])))
+        qflist.append(':'.join(map(str, [bp.file, bp.line, line])))
     vim.command('%s %s' % (list_command, qflist))
 
 
