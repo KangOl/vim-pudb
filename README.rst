@@ -51,15 +51,11 @@ Commands
 
 ``:PudbLocList``
     Load all breakpoints into the location list. Does not jump to the first
-    entry. Breakpoints into buffers that are not loaded will be in the list, but
-    with the text '<buffer not loaded>'. Lines containing only whitespace
-    will appear with the text '<blank line>'
+    entry.
 
 ``:PudbQfList``
     Load all breakpoints into the quickfix list. Does not jump to the first
-    entry. Breakpoints into buffers that are not loaded will be in the list, but
-    with the text '<buffer not loaded>'. Lines containing only whitespace
-    will appear with the text '<blank line>'
+    entry.
 
 ``:PudbPopulateList <arg>``
     Supply a list of all breakpoints, in quickfix format, to the Ex command
@@ -70,6 +66,9 @@ Commands
     Sometimes the breakpoint signs can get out of date. The above commands will
     all trigger an update, but this command lets you trigger an update without
     doing anything else.
+
+    NOTE: There should no longer be any need to call this command. Breakpoint
+    signs are updated whenever you save the buffer.
 
 
 Mappings
@@ -114,8 +113,5 @@ This plugin uses sign groups. You can change the name of the sign group using
 Known problems
 ==============
 
-- Currently, the list of breakpoints is not reloaded automatically. Signs are
-  only updated when a python buffer is first read, or when one of the above
-  commands is called.
 - There may be room for speed optimisations.
 - There is currently no way to specify which breakpoint file to use.
