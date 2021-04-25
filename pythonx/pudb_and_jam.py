@@ -84,7 +84,7 @@ def clearAll():
     update()
 
 
-def list():
+def list_breakpoints():
     """
     Prints a list of all the breakpoints in all files.
     Shows the full file path, line number, and condition of each breakpoint.

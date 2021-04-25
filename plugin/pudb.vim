@@ -43,7 +43,7 @@ pyx import pudb_and_jam
 ""
 command! PudbClearAll pyx pudb_and_jam.clearAll()
 command! PudbEdit     pyx pudb_and_jam.edit()
-command! PudbList     pyx pudb_and_jam.list()
+command! PudbList     pyx pudb_and_jam.list_breakpoints()
 command! PudbLocList  pyx pudb_and_jam.locationList()
 command! PudbQfList   pyx pudb_and_jam.quickfixList()
 command! PudbToggle   pyx pudb_and_jam.toggle()
