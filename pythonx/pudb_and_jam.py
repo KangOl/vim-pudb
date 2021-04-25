@@ -18,6 +18,14 @@ def breakpoints():
     return starmap(Breakpoint, load_breakpoints(*LOAD_ARGS))
 
 
+def breakpoint_dict():
+    """
+    :return: The saved breakpoints, as a dict with (filename, line number) keys
+    :rtype: dict(tuple(str, int), Breakpoint)
+    """
+    return {(bp.file, bp.line): bp for bp in breakpoints()}
+
+
 def update():
     vim.command('call sign_unplace(g:pudb_sign_group)')
     for bp in breakpoints():
@@ -39,8 +47,7 @@ def toggle():
     """
     Toggles a breakpoint on the current line.
     """
-    bps = {(bp.file, bp.line): bp
-           for bp in breakpoints()}
+    bps = breakpoint_dict()
 
     filename = vim.eval('expand("%:p")')
     row, col = vim.current.window.cursor
@@ -60,8 +67,7 @@ def edit():
     Edit the condition of a breakpoint on the current line.
     If no such breakpoint exists, creates one.
     """
-    bps = {(bp.file, bp.line): bp
-           for bp in breakpoints()}
+    bps = breakpoint_dict()
 
     filename = vim.eval('expand("%:p")')
     row, col = vim.current.window.cursor
