@@ -94,7 +94,7 @@ The text of the sign can be defined with ``g:pudb_sign`` (default ``'B>'``):
 
 ``let g:pudb_sign = 'B>'``
 
-The highlight group of the sign in the sign colum can be defined with
+The highlight group of the sign in the sign column can be defined with
 ``g:pudb_highlight`` (default ``'error'``):
 
 ``let g:pudb_highlight = 'error'``
