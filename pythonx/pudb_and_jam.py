@@ -1,8 +1,8 @@
 # vim: tw=79
-import linecache
 import vim
 
 from bdb import Breakpoint
+from linecache import checkcache
 from pudb.settings import load_breakpoints, save_breakpoints
 from pudb import NUM_VERSION
 
@@ -135,5 +135,5 @@ def clearLineCache():
     Clear the python line cache for the given file if it has changed
     """
     filename = vim.eval('expand("%:p")')
-    linecache.checkcache(filename)
+    checkcache(filename)
     update()
