@@ -43,20 +43,28 @@ def update():
             continue
 
 
+def current_position():
+    """
+    :return: a filename, line number pair, to be used as a key for a
+        breakpoint.
+    :rtype: tuple(str, int)
+    """
+    filename = vim.eval('expand("%:p")')
+    row, _ = vim.current.window.cursor
+    return (filename, row)
+
+
 def toggle():
     """
     Toggles a breakpoint on the current line.
     """
     bps = breakpoint_dict()
+    bp_key = current_position()
 
-    filename = vim.eval('expand("%:p")')
-    row, col = vim.current.window.cursor
-
-    bp_key = (filename, row)
     if bp_key in bps:
         bps.pop(bp_key)
     else:
-        bps[bp_key] = Breakpoint(filename, row)
+        bps[bp_key] = Breakpoint(*bp_key)
 
     save_breakpoints(bps.values())
     update()
@@ -68,13 +76,10 @@ def edit():
     If no such breakpoint exists, creates one.
     """
     bps = breakpoint_dict()
+    bp_key = current_position()
 
-    filename = vim.eval('expand("%:p")')
-    row, col = vim.current.window.cursor
-
-    bp_key = (filename, row)
     if bp_key not in bps:
-        bps[bp_key] = Breakpoint(filename, row)
+        bps[bp_key] = Breakpoint(*bp_key)
     bp = bps[bp_key]
 
     old_cond = '' if bp.cond is None else bp.cond
