@@ -26,7 +26,7 @@ def breakpoint_dict():
     return {(bp.file, bp.line): bp for bp in breakpoints()}
 
 
-def breakpoint_strings():
+def breakpoint_strings(empty_cond_str='<condition not set>'):
     """
     :return: An generator over the saved breakpoints as strings in the format:
         "filename:linenr:condition"
@@ -36,7 +36,7 @@ def breakpoint_strings():
         '{file}:{line:d}:{cond}'.format(
             file=bp.file,
             line=bp.line,
-            cond=bp.cond if bp.cond else ' ')
+            cond=bp.cond if bp.cond else empty_cond_str)
         for bp in breakpoints()
     )
 
@@ -134,17 +134,8 @@ def populateList(list_command):
     quickfix format.
     """
     update()
-    qflist = []
-    for bp in breakpoints():
-        try:
-            line = vim.eval('getbufline("%s", %s)'
-                            % (bp.file, bp.line))[0]
-            if line.strip() == '':
-                line = '<blank line>'
-        except LookupError:
-            line = '<buffer not loaded>'
-        qflist.append(':'.join(map(str, [bp.file, bp.line, line])))
-    vim.command('%s %s' % (list_command, qflist))
+    bps = list(breakpoint_strings())
+    vim.command('%s %s' % (list_command, bps))
 
 
 def quickfixList():
