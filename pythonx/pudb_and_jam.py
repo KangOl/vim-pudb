@@ -26,6 +26,21 @@ def breakpoint_dict():
     return {(bp.file, bp.line): bp for bp in breakpoints()}
 
 
+def breakpoint_strings():
+    """
+    :return: An generator over the saved breakpoints as strings in the format:
+        "filename:linenr:condition"
+    :rtype: generator(str)
+    """
+    return (
+        '{file}:{line:d}:{cond}'.format(
+            file=bp.file,
+            line=bp.line,
+            cond=bp.cond if bp.cond else ' ')
+        for bp in breakpoints()
+    )
+
+
 def update():
     vim.command('call sign_unplace(g:pudb_sign_group)')
     for bp in breakpoints():
@@ -109,10 +124,8 @@ def list_breakpoints():
     """
     update()
     vim.command('echomsg "Listing all pudb breakpoints:"')
-    for bp in breakpoints():
-        vim.command('echomsg "%s:%d:%s"' % (
-            bp.file, bp.line, '' if not bool(bp.cond) else ' %s' % bp.cond
-        ))
+    for bp_string in breakpoint_strings():
+        vim.command('echomsg "%s"' % bp_string)
 
 
 def populateList(list_command):
