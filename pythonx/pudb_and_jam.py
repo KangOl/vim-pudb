@@ -41,7 +41,7 @@ def breakpoint_strings(empty_cond_str='<condition not set>'):
     )
 
 
-def update():
+def update_breakpoints():
     vim.command('call sign_unplace(g:pudb_sign_group)')
     for bp in breakpoints():
         try:
@@ -69,7 +69,7 @@ def current_position():
     return (filename, row)
 
 
-def toggle():
+def toggle_breakpoint():
     """
     Toggles a breakpoint on the current line.
     """
@@ -82,10 +82,10 @@ def toggle():
         bps[bp_key] = Breakpoint(*bp_key)
 
     save_breakpoints(bps.values())
-    update()
+    update_breakpoints()
 
 
-def edit():
+def edit_breakpoint():
     """
     Edit the condition of a breakpoint on the current line.
     If no such breakpoint exists, creates one.
@@ -106,15 +106,15 @@ def edit():
     vim.command('echohl None')
 
     save_breakpoints(bps.values())
-    update()
+    update_breakpoints()
 
 
-def clearAll():
+def clear_all_breakpoints():
     """
     Clears all pudb breakpoints from all files.
     """
     save_breakpoints([])
-    update()
+    update_breakpoints()
 
 
 def list_breakpoints():
@@ -122,40 +122,40 @@ def list_breakpoints():
     Prints a list of all the breakpoints in all files.
     Shows the full file path, line number, and condition of each breakpoint.
     """
-    update()
+    update_breakpoints()
     vim.command('echomsg "Listing all pudb breakpoints:"')
     for bp_string in breakpoint_strings():
         vim.command('echomsg "%s"' % bp_string)
 
 
-def populateList(list_command):
+def populate_list(list_command):
     """
     Calls the given vim command with a list of the breakpoints as strings in
     quickfix format.
     """
-    update()
+    update_breakpoints()
     bps = list(breakpoint_strings())
     vim.command('%s %s' % (list_command, bps))
 
 
-def quickfixList():
+def quickfix_list():
     """
     Populate the quickfix list with the breakpoint locations.
     """
-    populateList('cgetexpr')
+    populate_list('cgetexpr')
 
 
-def locationList():
+def location_list():
     """
     Populate the location list with the breakpoint locations.
     """
-    populateList('lgetexpr')
+    populate_list('lgetexpr')
 
 
-def clearLineCache():
+def clear_linecache():
     """
     Clear the python line cache for the given file if it has changed
     """
     filename = vim.eval('expand("%:p")')
     checkcache(filename)
-    update()
+    update_breakpoints()

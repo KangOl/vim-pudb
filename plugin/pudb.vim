@@ -41,22 +41,22 @@ pyx import pudb_and_jam
 ""
 " Define ex commands for all the above functions so they are user-accessible.
 ""
-command! PudbClearAll pyx pudb_and_jam.clearAll()
-command! PudbEdit     pyx pudb_and_jam.edit()
+command! PudbClearAll pyx pudb_and_jam.clear_all_breakpoints()
+command! PudbEdit     pyx pudb_and_jam.edit_breakpoint()
 command! PudbList     pyx pudb_and_jam.list_breakpoints()
-command! PudbLocList  pyx pudb_and_jam.locationList()
-command! PudbQfList   pyx pudb_and_jam.quickfixList()
-command! PudbToggle   pyx pudb_and_jam.toggle()
-command! PudbUpdate   pyx pudb_and_jam.update()
+command! PudbLocList  pyx pudb_and_jam.location_list()
+command! PudbQfList   pyx pudb_and_jam.quickfix_list()
+command! PudbToggle   pyx pudb_and_jam.toggle_breakpoint()
+command! PudbUpdate   pyx pudb_and_jam.update_breakpoints()
 command! -nargs=1 -complete=command PudbPopulateList
-            \ pyx pudb_and_jam.populateList("<args>")
+            \ pyx pudb_and_jam.populate_list("<args>")
 
 
 ""
 " If we were loaded lazily, update immediately.
 ""
 if &filetype ==? 'python'
-    pyx pudb_and_jam.update()
+    pyx pudb_and_jam.update_breakpoints()
 endif
 
 
@@ -66,5 +66,5 @@ augroup pudb
 
     " Force a linecache update after writes so the breakpoints can be parsed
     " correctly.
-    autocmd BufWritePost *.py pyx pudb_and_jam.clearLineCache()
+    autocmd BufWritePost *.py pyx pudb_and_jam.clear_linecache()
 augroup end
