@@ -42,7 +42,7 @@ def breakpoint_strings(empty_cond_str='<condition not set>'):
 
 
 def update_breakpoints():
-    vim.command('call sign_unplace(g:pudb_sign_group)')
+    vim.eval('sign_unplace(g:pudb_sign_group)')
     for bp in breakpoints():
         try:
             opts = ('{"lnum": %d, "priority": %d}'
@@ -64,7 +64,7 @@ def current_position():
         breakpoint.
     :rtype: tuple(str, int)
     """
-    filename = vim.eval('expand("%:p")')
+    filename = vim.current.buffer.name
     row, _ = vim.current.window.cursor
     return (filename, row)
 
@@ -156,6 +156,6 @@ def clear_linecache():
     """
     Clear the python line cache for the given file if it has changed
     """
-    filename = vim.eval('expand("%:p")')
+    filename = vim.current.buffer.name
     checkcache(filename)
     update_breakpoints()
