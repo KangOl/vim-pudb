@@ -18,10 +18,10 @@ CONTENTS                                        *vim-pudb-contents* *vim-pudb*
         4.2 PudbEdit .......................... |vim-pudb-:PudbEdit|
         4.3 PudbClearAll ...................... |vim-pudb-:PudbClearAll|
         4.4 PudbList .......................... |vim-pudb-:PudbList|
-        4.4 PudbLocList ....................... |vim-pudb-:PudbLocList|
-        4.5 PudbQfList ........................ |vim-pudb-:PudbQfList|
-        4.5 PudbPopulateList .................. |vim-pudb-:PudbPopulateList|
-        4.6 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
+        4.5 PudbLocList ....................... |vim-pudb-:PudbLocList|
+        4.6 PudbQfList ........................ |vim-pudb-:PudbQfList|
+        4.7 PudbPopulateList .................. |vim-pudb-:PudbPopulateList|
+        4.8 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
     5. Configuration .......................... |vim-pudb-configuration|
         5.1 vim-pudb-sign ..................... |vim-pudb-sign|
         5.2 vim-pudb-sign-group ............... |vim-pudb-sign-group|
