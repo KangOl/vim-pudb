@@ -85,7 +85,7 @@ def toggle_breakpoint():
     update_breakpoints()
 
 
-def edit_breakpoint():
+def edit_condition():
     """
     Edit the condition of a breakpoint on the current line.
     If no such breakpoint exists, creates one.
