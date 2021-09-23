@@ -109,6 +109,36 @@ def edit_condition():
     update_breakpoints()
 
 
+def move_breakpoint():
+    """
+    Move the breakpoint to a different line, preserving the condition.
+    """
+    bps = breakpoint_dict()
+    bp_key = current_position()
+
+    if bp_key not in bps:
+        vim.command('echo "No breakpoint at current position"')
+        return
+
+    bp = bps[bp_key]
+    old_line = bp.line
+    vim.command('echo "Current line: {}"'.format(old_line))
+    vim.command('echohl Question')
+    vim.eval('inputsave()')
+    new_line = (vim.eval('input("New line: ", "{}")'.format(old_line)))
+    vim.eval('inputrestore()')
+    vim.command('echohl None')
+
+    try:
+        bp.line = int(new_line)
+    except ValueError:
+        vim.command('echo "Invalid line number: {}"'.format(new_line))
+        return
+
+    save_breakpoints(bps.values())
+    update_breakpoints()
+
+
 def clear_all_breakpoints():
     """
     Clears all pudb breakpoints from all files.
