@@ -4,7 +4,8 @@ import vim
 from bdb import Breakpoint
 from itertools import starmap
 from linecache import checkcache
-from pudb.settings import load_breakpoints, save_breakpoints
+from pudb.settings import (
+    load_breakpoints, save_breakpoints, get_breakpoints_file_name)
 from pudb import NUM_VERSION
 
 LOAD_ARGS = () if NUM_VERSION >= (2013, 1) else (None,)
@@ -137,6 +138,13 @@ def move_breakpoint():
 
     save_breakpoints(bps.values())
     update_breakpoints()
+
+
+def edit_breakpoint_file():
+    """
+    Open the breakpoint file in a buffer for direct editing.
+    """
+    vim.command('edit {}'.format(get_breakpoints_file_name()))
 
 
 def clear_all_breakpoints():

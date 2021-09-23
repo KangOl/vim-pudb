@@ -42,6 +42,7 @@ pyx import pudb_and_jam
 " Define ex commands for all the above functions so they are user-accessible.
 ""
 command! PudbClearAll pyx pudb_and_jam.clear_all_breakpoints()
+command! PudbEditFile pyx pudb_and_jam.edit_breakpoint_file()
 command! PudbEdit     pyx pudb_and_jam.edit_condition()
 command! PudbMove     pyx pudb_and_jam.move_breakpoint()
 command! PudbList     pyx pudb_and_jam.list_breakpoints()
