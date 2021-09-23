@@ -16,6 +16,7 @@ CONTENTS                                        *vim-pudb-contents* *vim-pudb*
     4. Commands ............................... |vim-pudb-commands|
         4.1 PudbToggle ........................ |vim-pudb-:PudbToggle|
         4.2 PudbEdit .......................... |vim-pudb-:PudbEdit|
+        4.2 PudbMove .......................... |vim-pudb-:PudbMove|
         4.3 PudbClearAll ...................... |vim-pudb-:PudbClearAll|
         4.4 PudbList .......................... |vim-pudb-:PudbList|
         4.5 PudbLocList ....................... |vim-pudb-:PudbLocList|
@@ -46,6 +47,7 @@ to add to your `.vimrc` file:
 >
     nnoremap <leader>bc :<C-U>PudbClearAll<CR>
     nnoremap <leader>be :<C-U>PudbEdit<CR>
+    nnoremap <leader>bm :<C-U>PudbMove<CR>
     nnoremap <leader>bl :<C-U>PudbList<CR>
     nnoremap <leader>bq :<C-U>PudbQfList<CR>
     nnoremap <leader>bp :<C-U>PudbToggle<CR>
@@ -85,6 +87,11 @@ COMMANDS                                        *vim-pudb-commands*
 :PudbEdit
     Edit the condition of a breakpoint on the current line. Creates a
     breakpoint if one doesn't already exist.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbMove*
+:PudbMove
+    Move the location of a breakpoint on the current line.
 
 ------------------------------------------------------------------------------
                                                 *vim-pudb-:PudbClearAll*
