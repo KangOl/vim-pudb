@@ -23,6 +23,7 @@ CONTENTS                                        *vim-pudb-contents* *vim-pudb*
         4.6 PudbQfList ........................ |vim-pudb-:PudbQfList|
         4.7 PudbPopulateList .................. |vim-pudb-:PudbPopulateList|
         4.8 PudbUpdate ........................ |vim-pudb-:PudbUpdate|
+        4.8 PudbEditFile ...................... |vim-pudb-:PudbEditFile|
     5. Configuration .......................... |vim-pudb-configuration|
         5.1 vim-pudb-sign ..................... |vim-pudb-sign|
         5.2 vim-pudb-sign-group ............... |vim-pudb-sign-group|
@@ -132,6 +133,12 @@ COMMANDS                                        *vim-pudb-commands*
 
     NOTE: There should no longer be any need to call this command. Breakpoint
     signs are updated whenever you save the buffer.
+
+------------------------------------------------------------------------------
+                                                *vim-pudb-:PudbEditFile*
+:PudbEditFile
+    Open the breakpoint file for editing in the current window. Breakpoint
+    signs will not be maintained when saving direct changes to the file.
 
 
 ==============================================================================
