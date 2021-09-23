@@ -138,18 +138,41 @@ def populate_list(list_command):
     vim.command('%s %s' % (list_command, bps))
 
 
+def quickfix_list_arg():
+    """
+    :return: The list of dicts to provide as the first argument to setqflist()
+    :rtype: list[dict]
+    """
+    return [
+        {
+            'filename': bp.file,
+            'lnum': bp.line,
+            'text': bp.cond if bp.cond else '',
+        }
+        for bp in breakpoints()
+    ]
+
+
 def quickfix_list():
     """
     Populate the quickfix list with the breakpoint locations.
     """
-    populate_list('cgetexpr')
+    setqflist = vim.Function('setqflist')
+    entries = quickfix_list_arg()
+    setqflist(entries)
+    height = min(10, len(entries))
+    vim.command('cwindow {}'.format(height))
 
 
 def location_list():
     """
     Populate the location list with the breakpoint locations.
     """
-    populate_list('lgetexpr')
+    setloclist = vim.Function('setloclist')
+    entries = quickfix_list_arg()
+    setloclist(entries)
+    height = min(10, len(entries))
+    vim.command('cwindow {}'.format(height))
 
 
 def clear_linecache():
