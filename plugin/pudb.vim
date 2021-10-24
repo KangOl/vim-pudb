@@ -44,11 +44,13 @@ python3 << EOF
 import vim
 import os
 import subprocess
+import shutil
 
 filename = vim.eval('expand("%:p")')
 
 scriptname = os.path.join(vim.eval('s:plugin_dir'), 'load_breakpoints.py')
-bps = subprocess.Popen(['python', scriptname, filename], stdout=subprocess.PIPE)
+python_path = shutil.which('python') or shutil.which('python3')
+bps = subprocess.Popen([python_path, scriptname, filename], stdout=subprocess.PIPE)
 
 for bp in bps.stdout:
     bp = int(bp.strip())
@@ -69,7 +71,8 @@ filename = vim.eval('expand("%:p")')
 row, col = vim.current.window.cursor
 
 scriptname = os.path.join(vim.eval('s:plugin_dir'), 'set_breakpoint.py')
-proc = subprocess.Popen(['python', scriptname, filename, str(row)])
+python_path = shutil.which('python') or shutil.which('python3')
+proc = subprocess.Popen([python_path, scriptname, filename, str(row)])
 proc.wait()
 
 vim.command('call s:UpdateBreakPoints()')
