@@ -29,7 +29,7 @@ def breakpoint_dict():
 
 def breakpoint_strings(empty_cond_str='<condition not set>'):
     """
-    :return: An generator over the saved breakpoints as strings in the format:
+    :return: A generator over the saved breakpoints as strings in the format:
         "filename:linenr:condition"
     :rtype: generator(str)
     """
@@ -46,14 +46,21 @@ def update_breakpoints():
     vim.eval('sign_unplace(g:pudb_sign_group)')
     for bp in breakpoints():
         try:
-            opts = ('{"lnum": %d, "priority": %d}'
-                    % (bp.line, vim.vars['pudb_priority']))
+            options = '{{"lnum": {line:d}, "priority": {prio:d}}}'.format(
+                line=bp.line,
+                prio=vim.vars['pudb_priority'],
+            )
 
             # Critical to use vim.eval here instead of vim.vars[] to get sign
             # group, since vim.vars[] will render the string as
             # "b'pudb_sign_group'" instead of "pudb_sign_group"
-            vim.eval('sign_place(0, "%s", "PudbBreakPoint", "%s", %s)'
-                     '' % (vim.eval('g:pudb_sign_group'), bp.file, opts))
+            vim.eval(
+                'sign_place(0, "{group}", "PudbBreakPoint", "{file}", {opts})'
+                .format(
+                    group=vim.eval('g:pudb_sign_group'),
+                    file=bp.file,
+                    opts=options,
+                ))
         except vim.error:
             # Buffer for the given file isn't loaded.
             continue
@@ -99,10 +106,10 @@ def edit_condition():
     bp = bps[bp_key]
 
     old_cond = '' if bp.cond is None else bp.cond
-    vim.command('echo "Current condition: %s"' % old_cond)
+    vim.command('echo "Current condition: {}"'.format(old_cond))
     vim.command('echohl Question')
     vim.eval('inputsave()')
-    bp.cond = vim.eval('input("New Condition: ", "%s")' % old_cond)
+    bp.cond = vim.eval('input("New Condition: ", "{}")'.format(old_cond))
     vim.eval('inputrestore()')
     vim.command('echohl None')
 
@@ -163,7 +170,7 @@ def list_breakpoints():
     update_breakpoints()
     vim.command('echomsg "Listing all pudb breakpoints:"')
     for bp_string in breakpoint_strings():
-        vim.command('echomsg "%s"' % bp_string)
+        vim.command('echomsg "{}"'.format(bp_string))
 
 
 def populate_list(list_command):
@@ -173,7 +180,10 @@ def populate_list(list_command):
     """
     update_breakpoints()
     bps = list(breakpoint_strings())
-    vim.command('%s %s' % (list_command, bps))
+    vim.command('{command} {breakpoints}'.format(
+        command=list_command,
+        breakpoints=bps,
+    ))
 
 
 def quickfix_list_arg():
