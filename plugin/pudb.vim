@@ -63,7 +63,9 @@ endif
 
 
 augroup pudb
-    " Also update when the file is first read.
+    autocmd!
+
+    " Update when the file is first read.
     autocmd BufReadPost *.py PudbUpdate
 
     " Force a linecache update after writes so the breakpoints can be parsed
