@@ -36,7 +36,12 @@ call sign_define('PudbBreakPoint', {
 ""
 " Everything is defined in a python module on the runtimepath!
 ""
-pyx import pudb_and_jam
+try
+    pyx import pudb_and_jam
+catch
+    echoerr 'vim-pudb-and-jam requires pudb to be installed'
+    finish
+endtry
 
 ""
 " Define ex commands for all the above functions so they are user-accessible.
