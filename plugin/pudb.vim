@@ -8,13 +8,19 @@ if exists('g:loaded_pudb_plugin') || &compatible
 endif
 let g:loaded_pudb_plugin = 1
 
+function! s:EchoError(msg) abort
+    echohl Error
+    echo a:msg
+    echohl None
+endfunction
+
 if !has('pythonx')
-    echoerr 'vim-pudb requires vim compiled with +python and/or +python3'
+    call s:EchoError('vim-pudb requires vim compiled with +python and/or +python3')
     finish
 endif
 
 if !has('signs')
-    echoerr 'vim-pudb requires vim compiled with +signs'
+    call s:EchoError('vim-pudb requires vim compiled with +signs')
     finish
 endif
 
@@ -39,9 +45,13 @@ call sign_define('PudbBreakPoint', {
 try
     pyx import pudb_and_jam
 catch
-    echoerr 'vim-pudb-and-jam requires pudb to be installed'
-    finish
+    let s:import_failed = v:true
 endtry
+
+if get(s:, 'import_failed', v:false)
+    call s:EchoError('vim-pudb-and-jam requires pudb to be installed')
+    finish
+endif
 
 ""
 " Define ex commands for all the above functions so they are user-accessible.
