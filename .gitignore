@@ -1,0 +1,4 @@
+tags
+*.sw[op]
+__pycache__
+doc/tags

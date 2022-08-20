@@ -1,90 +1,89 @@
 " File: pudb.vim
-" Author: Christophe Simonis
-" Description: Manage pudb breakpoints directly into vim
-" Last Modified: March 02, 2018
-"
-" TODO: handle conditions in breakpoints (at least do not loose them when saving breakpoints)
+" Author: Christophe Simonis, Michael van der Kamp
+" Description: Manage pudb breakpoints directly from vim
 
-if exists('g:loaded_pudb_plugin') || &cp
+
+if exists('g:loaded_pudb_plugin') || &compatible
     finish
 endif
 let g:loaded_pudb_plugin = 1
 
-if !has("pythonx")
-    echo "Error: Required vim compiled with +python and/or +python3"
+function! s:EchoError(msg) abort
+    echohl Error
+    echo a:msg
+    echohl None
+endfunction
+
+if !has('pythonx')
+    call s:EchoError('vim-pudb requires vim compiled with +python and/or +python3')
     finish
 endif
 
-sign define PudbBreakPoint text=Ø) texthl=error
-
-let s:first_sign_id = 10000
-let s:next_sign_id = s:first_sign_id
-
-augroup pudb
-    autocmd BufReadPost *.py call s:UpdateBreakPoints()
-augroup end
-
-command! TogglePudbBreakPoint call s:ToggleBreakPoint()
-
-function! s:UpdateBreakPoints()
-
-" first remove existing signs
-if !exists("b:pudb_sign_ids")
-    let b:pudb_sign_ids = []
+if !has('signs')
+    call s:EchoError('vim-pudb requires vim compiled with +signs')
+    finish
 endif
 
-for i in b:pudb_sign_ids
-    exec "sign unplace " . i
-endfor
-let b:pudb_sign_ids = []
+
+""
+" Load options and set defaults
+""
+let g:pudb_sign       = get(g:, 'pudb_sign',       'B>')
+let g:pudb_highlight  = get(g:, 'pudb_highlight',  'error')
+let g:pudb_priority   = get(g:, 'pudb_priority',   100)
+let g:pudb_sign_group = get(g:, 'pudb_sign_group', 'pudb_sign_group')
+
+call sign_define('PudbBreakPoint', {
+            \   'text':   g:pudb_sign,
+            \   'texthl': g:pudb_highlight
+            \ })
 
 
-pythonx << EOF
-import vim
-from pudb.settings import load_breakpoints
-from pudb import NUM_VERSION
+""
+" Everything is defined in a python module on the runtimepath!
+""
+try
+    pyx import pudb_and_jam
+catch
+    let s:import_failed = v:true
+endtry
 
-filename = vim.eval('expand("%:p")')
+if get(s:, 'import_failed', v:false)
+    call s:EchoError('vim-pudb-and-jam requires pudb to be installed')
+    finish
+endif
 
-args = () if NUM_VERSION >= (2013, 1) else (None,)
-bps = load_breakpoints(*args)
+""
+" Define ex commands for all the above functions so they are user-accessible.
+""
+command! PudbClearAll pyx pudb_and_jam.clear_all_breakpoints()
+command! PudbEditFile pyx pudb_and_jam.edit_breakpoint_file()
+command! PudbEdit     pyx pudb_and_jam.edit_condition()
+command! PudbMove     pyx pudb_and_jam.move_breakpoint()
+command! PudbList     pyx pudb_and_jam.list_breakpoints()
+command! PudbLocList  pyx pudb_and_jam.location_list()
+command! PudbQfList   pyx pudb_and_jam.quickfix_list()
+command! PudbToggle   pyx pudb_and_jam.toggle_breakpoint()
+command! PudbUpdate   pyx pudb_and_jam.update_breakpoints()
+command! -nargs=1 -complete=command PudbPopulateList
+            \ pyx pudb_and_jam.populate_list("<args>")
 
-for bp in bps:
-    if bp[0] != filename:
-        continue
 
-    sign_id = vim.eval("s:next_sign_id")
-    vim.command("sign place %s line=%s name=PudbBreakPoint file=%s" % (sign_id, bp[1], filename))
-    vim.eval("add(b:pudb_sign_ids, s:next_sign_id)")
-    vim.command("let s:next_sign_id += 1")
-EOF
+""
+" If we were loaded lazily, update immediately.
+""
+if &filetype ==? 'python'
+    pyx pudb_and_jam.update_breakpoints()
+endif
 
-endfunction
 
-function! s:ToggleBreakPoint()
-pythonx << EOF
-import vim
-from pudb.settings import load_breakpoints, save_breakpoints
-from pudb import NUM_VERSION
-from bdb import Breakpoint
+augroup pudb
+    autocmd!
 
-args = () if NUM_VERSION >= (2013, 1) else (None,)
-bps = [bp[:2] for bp in load_breakpoints(*args)]
+    " Update when the file is first read.
+    autocmd BufReadPost *.py PudbUpdate
 
-filename = vim.eval('expand("%:p")')
-row, col = vim.current.window.cursor
-
-bp = (filename, row)
-if bp in bps:
-    bps.pop(bps.index(bp))
-else:
-    bps.append(bp)
-
-bp_list = [Breakpoint(bp[0], bp[1]) for bp in bps]
-
-save_breakpoints(bp_list)
-
-vim.command('call s:UpdateBreakPoints()')
-EOF
-endfunction
-
+    " Force a linecache update after writes so the breakpoints can be parsed
+    " correctly.
+    autocmd BufWritePost *.py pyx pudb_and_jam.clear_linecache()
+augroup end

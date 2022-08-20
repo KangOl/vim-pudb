@@ -1,31 +1,117 @@
-vim-pudb
-========
+vim-pudb-and-jam
+================
 
-simple plugin allowing you to manage pudb breakpoint directly into vim.
+A simple plugin allowing you to manage pudb breakpoints directly from vim.
+Forked from `vim-pudb`_ and given some jammy features such as setting and
+editing breakpoint conditions, customization options, improved persistence
+of breakpoints, and the ability to list active breakpoints either as a
+printed message or in a quickfix list.
 
-This plugin need vim to be compiled with +python
+.. _vim-pudb: https://github.com/KangOl/vim-pudb
+
 
 Installation
 ============
 
-The recommended way of installing is to use `vim-pathogen`_
+Similar to any other vim plugin, use your preferred method. If you're new, check
+out
+`vim-pathogen <https://github.com/tpope/vim-pathogen#readme>`_ or
+`vim-plug <https://github.com/junegunn/vim-plug>`_ or
+`:help packages <https://vimhelp.org/repeat.txt.html#packages>`_
 
 
-How to use
-==========
-To add/remove a breakpoint, you just need to call the command ``:TogglePudbBreakPoint``
+Requirements
+------------
 
-For easy access, you can bind it to the F8 key.
+This plugin needs vim to be compiled with ``+python`` or ``+python3`` as well as
+``+signs`` and is intended for vim 8.2 or later, though I'm not sure exactly
+which patch is the earliest that is supported.
+
+You will also need to have `pudb`_ installed, obviously.
+
+.. _pudb: https://pypi.org/project/pudb/
 
 
-    ``nnoremap <F8> :TogglePudbBreakPoint<CR>``
+Commands
+========
 
-    ``inoremap <F8> <ESC>:TogglePudbBreakPoint<CR>a``
+``:PudbToggle``
+    Add / remove a breakpoint at the current line.
 
-.. _vim-pathogen: https://github.com/tpope/vim-pathogen#readme
+``:PudbEdit``
+    Edit the condition of a breakpoint on the current line. Creates a
+    breakpoint if one doesn't already exist.
 
-Know problems
+``:PudbClearAll``
+    Remove all breakpoints from every file.
+
+``:PudbList``
+    Show a list of the full file paths, line numbers, and conditions of all
+    breakpoints.
+
+``:PudbLocList``
+    Load all breakpoints into the location list. Does not jump to the first
+    entry.
+
+``:PudbQfList``
+    Load all breakpoints into the quickfix list. Does not jump to the first
+    entry.
+
+``:PudbPopulateList <arg>``
+    Supply a list of all breakpoints, in quickfix format, to the Ex command
+    given by <arg>. This is a generic form of PudbLocList and PudbQfList,
+    allowing you to customise the operation for any precise need you may have.
+
+``:PudbUpdate``
+    Sometimes the breakpoint signs can get out of date. The above commands will
+    all trigger an update, but this command lets you trigger an update without
+    doing anything else.
+
+    NOTE: There should no longer be any need to call this command. Breakpoint
+    signs are updated whenever you save the buffer.
+
+
+Mappings
+========
+
+There are no mappings set up by default, so you don't have to worry about
+conflicts with other plugins. Here's what I use:
+
+::
+
+    nnoremap <leader>bc :<C-U>PudbClearAll<CR>
+    nnoremap <leader>be :<C-U>PudbEdit<CR>
+    nnoremap <leader>bl :<C-U>PudbList<CR>
+    nnoremap <leader>bq :<C-U>PudbQfList<CR>
+    nnoremap <leader>bp :<C-U>PudbToggle<CR>
+    nnoremap <leader>bu :<C-U>PudbUpdate<CR>
+
+
+Configuration
 =============
-Currently, the list of breakpoints is not reloaded automatically. 
 
-There is also room for speed optimisations.
+The text of the sign can be defined with ``g:pudb_sign`` (default ``'B>'``):
+
+``let g:pudb_sign = 'B>'``
+
+The highlight group of the sign in the sign column can be defined with
+``g:pudb_highlight`` (default ``'error'``):
+
+``let g:pudb_highlight = 'error'``
+
+The priority of the breakpoint signs can be defined with ``g:pudb_priority``
+(default ``100``):
+
+``let g:pudb_priority = 100``
+
+This plugin uses sign groups. You can change the name of the sign group using
+``g:pudb_sign_group`` (default ``pudb_sign_group``):
+
+``let g:pudb_sign_group = 'pudb_sign_group'``
+
+
+Known problems
+==============
+
+- There may be room for speed optimisations.
+- There is currently no way to specify which breakpoint file to use.
